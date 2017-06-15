@@ -13,21 +13,19 @@ from scipy import ndimage
 import time
 import gc
 
+print("processing starts")
+
 # TODO check with zipped files
 s1paths = list(sys.argv[1].split(','))
 s1meta = "manifest.safe"
 
 products = []
-print("start reading product ")
-start_time = time.time()
-print time.strftime("%Y-%m-%d %H:%M")
-
+print("reading product")
 for s1path in s1paths:
     s1prd = "%s.SAFE/%s" % (s1path, s1meta)
     reader = ProductIO.getProductReader("SENTINEL-1")
     product = reader.readProductNodes(s1prd, None)
     products.append(product)
-
 
 # Extract information about the Sentinel-1 GRD products:
 
@@ -40,12 +38,13 @@ for product in products:
     print("Product: %s, %d x %d pixels" % (name, width, height))
     print("Bands:   %s" % (list(band_names)))
 
+print("start Subsetting")
 
 WKTReader = snappy.jpy.get_type('com.vividsolutions.jts.io.WKTReader')
 geom = WKTReader().read('POLYGON((-4.51 14.69,-4.477 14.227,-4.076 14.243,-4.054 14.642,-4.51 14.69))')
 
-sub_height = np.floor(height/8)
-sub_weight = np.floor(width/8)
+#sub_height = np.floor(height/8)
+#sub_weight = np.floor(width/8)
 HashMap = jpy.get_type('java.util.HashMap')
 GPF.getDefaultInstance().getOperatorSpiRegistry().loadOperatorSpis()
 
@@ -53,10 +52,8 @@ parameters = HashMap()
 parameters.put('copyMetadata', True)
 parameters.put('geoRegion', geom)
 
-parameters.put('height', sub_height)
-parameters.put('width', sub_weight)
-
-print("Subset dimension: %d x %d pixels" % (sub_weight, sub_height))
+#parameters.put('height', sub_height)
+#parameters.put('width', sub_weight)
 
 subsets = []
 
@@ -64,7 +61,11 @@ for product in products:
     subset = GPF.createProduct('Subset', parameters, product)
     subsets.append(subset)
 
+print("Subset dimension: %d x %d pixels" % (subset.getSceneRasterWidth(), subset.getSceneRasterHeight()))
+print("Subset region: %d x %d pixels" % (subset.getRegionWidth(), subset.getRegionHeight()))
+
 # Step 1: Pre-processing - Calibration
+print("start Calibration")
 
 parameters = HashMap()
 
@@ -75,13 +76,13 @@ parameters.put('selectedPolarisations', 'VV')
 calibrates = []
 
 for subset in subsets:
-
     calibrate = GPF.createProduct('Calibration', parameters, subset)
     calibrates.append(calibrate)
 
 # Step 2: Pre-processing - Speckle filtering
 
 parameters = HashMap()
+print("start Speckle Filtering")
 
 parameters.put('filter', 'Lee')
 parameters.put('filterSizeX', 7)
@@ -94,11 +95,11 @@ parameters.put('enl', 1.0)
 speckles = []
 
 for calibrate in calibrates:
-
     speckle = GPF.createProduct('Speckle-Filter', parameters, calibrate)
     speckles.append(speckle)
 
 parrameters = HashMap()
+print("start Terrain-Correction")
 
 parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
@@ -108,12 +109,12 @@ parameters.put('sourceBands', 'Sigma0_VV')
 
 terrains = []
 
-
 for speckle in speckles:
     terrain = GPF.createProduct('Terrain-Correction', parameters, speckle)
     terrains.append(terrain)
 
 parameters = HashMap()
+print("start Lineartodb conversion")
 
 lineartodbs = []
 
@@ -132,6 +133,7 @@ def rot_crop(c, ang):
 
 # TODO Try to use ImageIO instead of pyplot
 def printBand(product, band, vmin, vmax):
+print("start Printing")
 
     band = product.getBand(band)
     w = band.getRasterWidth()
