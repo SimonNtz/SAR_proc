@@ -133,8 +133,7 @@ def rot_crop(c, ang):
 
 # TODO Try to use ImageIO instead of pyplot
 def printBand(product, band, vmin, vmax):
-print("start Printing")
-
+    print("start Printing")
     band = product.getBand(band)
     w = band.getRasterWidth()
     h = band.getRasterHeight()
