@@ -157,4 +157,4 @@ for lineartodb in lineartodbs:
     plt.close()
     gc.collect()
 
-print("processing time: " + str(time.time()-start_time) + "seconds")
+#print("processing time: " + str(time.time()-start_time) + "seconds")
