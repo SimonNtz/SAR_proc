@@ -62,7 +62,7 @@ for product in products:
     subsets.append(subset)
 
 print("Subset dimension: %d x %d pixels" % (subset.getSceneRasterWidth(), subset.getSceneRasterHeight()))
-#print("Subset region: %d " % (subset.getRegion()))
+# print("Subset region: %d " % (subset.getRegion()))
 
 # Step 1: Pre-processing - Calibration
 print("start Calibration")
