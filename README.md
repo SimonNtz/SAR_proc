@@ -1,7 +1,7 @@
 Sentinel 1 (SAR) app processing module
 ===============================
 
-This repository is an example of processing module for [SAR_app](https://raw.githubusercontent.com/SimonNtz/SAR_app/) by SixSq . 
+This repository is an example of processing module for [SAR_app](https://github.com/SimonNtz/SAR_app/) by SixSq . 
 Its purpose is to provide the possibility to process SAR data with your own `mapper` and `reducer` functions.
 
 ## Instructions
