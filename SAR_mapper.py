@@ -3,24 +3,34 @@ sys.path.append('/root/.snap/snap-python')
 import snappy
 from snappy import GPF
 from snappy import HashMap
-from snappy import ProductIO
+from snappy import (ProductIO, ProductUtils, ProgressMonitor)
 jpy = snappy.jpy
+
+imageIO = jpy.get_type('javax.imageio.ImageIO')
+File = jpy.get_type('java.io.File')
+
 import matplotlib
 matplotlib.use('Agg')
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 import time
+import datetime
 import gc
 
-print("processing starts")
+
+def timestamp():
+    return(str(datetime.datetime.now().isoformat() + '-'))
+
+start_time=time.time()
+print(timestamp()+"processing starts")
 
 # TODO check with zipped files
 s1paths = list(sys.argv[1].split(','))
 s1meta = "manifest.safe"
 
 products = []
-print("reading product")
+print(timestamp()+"reading product")
 for s1path in s1paths:
     s1prd = "%s.SAFE/%s" % (s1path, s1meta)
     reader = ProductIO.getProductReader("SENTINEL-1")
@@ -38,22 +48,26 @@ for product in products:
     print("Product: %s, %d x %d pixels" % (name, width, height))
     print("Bands:   %s" % (list(band_names)))
 
-print("start subsetting")
+print(timestamp()+"start subsetting")
 
 WKTReader = snappy.jpy.get_type('com.vividsolutions.jts.io.WKTReader')
 geom = WKTReader().read('POLYGON((-4.51 14.69,-4.477 14.227,-4.076 14.243,-4.054 14.642,-4.51 14.69))')
 
-#sub_height = np.floor(height/8)
-#sub_weight = np.floor(width/8)
+
 HashMap = jpy.get_type('java.util.HashMap')
 GPF.getDefaultInstance().getOperatorSpiRegistry().loadOperatorSpis()
 
 parameters = HashMap()
-parameters.put('copyMetadata', True)
-parameters.put('geoRegion', geom)
 
-#parameters.put('height', sub_height)
-#parameters.put('width', sub_weight)
+x = 0
+y = 4000
+width = 5356
+height = 5673
+
+parameters.put('copyMetadata', True)
+parameters.put('region',  "%s,%s,%s,%s" % (x, y, width, height))
+#parameters.put('geoRegion', geom)
+
 
 subsets = []
 
@@ -61,11 +75,11 @@ for product in products:
     subset = GPF.createProduct('Subset', parameters, product)
     subsets.append(subset)
 
-print("Subset dimension: %d x %d pixels" % (subset.getSceneRasterWidth(), subset.getSceneRasterHeight()))
+print(timestamp()+"Subset dimension: %d x %d pixels" % (subset.getSceneRasterWidth(), subset.getSceneRasterHeight()))
 # print("Subset region: %d " % (subset.getRegion()))
 
 # Step 1: Pre-processing - Calibration
-print("start Calibration")
+print(timestamp()+"start Calibration")
 
 parameters = HashMap()
 
@@ -82,7 +96,7 @@ for subset in subsets:
 # Step 2: Pre-processing - Speckle filtering
 
 parameters = HashMap()
-print("start Speckle Filtering")
+print(timestamp()+"start Speckle Filtering")
 
 parameters.put('filter', 'Lee')
 parameters.put('filterSizeX', 7)
@@ -99,7 +113,7 @@ for calibrate in calibrates:
     speckles.append(speckle)
 
 parrameters = HashMap()
-print("start Terrain-Correction")
+print(timestamp()+"start Terrain-Correction")
 
 parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
@@ -114,7 +128,7 @@ for speckle in speckles:
     terrains.append(terrain)
 
 parameters = HashMap()
-print("start Lineartodb conversion")
+print(timestamp()+"start Lineartodb conversion")
 
 lineartodbs = []
 
@@ -133,7 +147,7 @@ def rot_crop(c, ang):
 
 # TODO Try to use ImageIO instead of pyplot
 def printBand(product, band, vmin, vmax):
-    print("start Printing")
+    print(timestamp()+"start Printing")
     band = product.getBand(band)
     w = band.getRasterWidth()
     h = band.getRasterHeight()
@@ -151,10 +165,18 @@ def printBand(product, band, vmin, vmax):
     plt.savefig(name + '.png', frameon=False)
     print('Printed!')
 
+def print2(band):
+    image = band.createColorIndexedImage(ProgressMonitor.NULL)
+    print('image created')
+    name = File('snappy_indexed_image.png')
+    save = imageIO.write(image,'PNG',name)
+
 
 for lineartodb in lineartodbs:
-    printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
-    plt.close()
-    gc.collect()
+    #printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
+    #plt.close()
+    #gc.collect()
+    print2(lineartodb.getBand('Sigma0_VV_db'))
 
-#print("processing time: " + str(time.time()-start_time) + "seconds")
+
+print(timestamp()+"Done. Processing time: " + str(time.time()-start_time) + "seconds")
