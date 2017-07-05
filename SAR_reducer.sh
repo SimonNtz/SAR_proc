@@ -1,9 +1,12 @@
 #!/bin/bash
+#
 # This script creates the final output.
 #
 # - Data location: /root/deployment/reducer/
 # - Output: animated GIF
 #
+set -e
+set -x
 
 output=SAR_animation_$(date +%s).gif
 base_path=~/SAR_app/deployment/reducer
