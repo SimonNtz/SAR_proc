@@ -61,8 +61,8 @@ parameters = HashMap()
 
 x = 0
 y = 4000
-width = 1356
-height = 1673
+width = 4356
+height = 4673
 
 parameters.put('copyMetadata', True)
 parameters.put('region',  "%s,%s,%s,%s" % (x, y, width, height))
