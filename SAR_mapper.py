@@ -65,8 +65,8 @@ width = 4356
 height = 4673
 
 parameters.put('copyMetadata', True)
-parameters.put('region',  "%s,%s,%s,%s" % (x, y, width, height))
-#parameters.put('geoRegion', geom)
+#parameters.put('region',  "%s,%s,%s,%s" % (x, y, width, height))
+parameters.put('geoRegion', geom)
 
 
 subsets = []
