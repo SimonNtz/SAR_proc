@@ -20,7 +20,7 @@ import gc
 
 
 def timestamp():
-    return(str(datetime.datetime.now().isoformat() + '-'))
+    return("@SAR_PROC: " + str(datetime.datetime.now().isoformat() + ' - '))
 
 start_time=time.time()
 print(timestamp()+"processing starts")
