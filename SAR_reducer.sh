@@ -2,13 +2,16 @@
 #
 # This script creates the final output.
 #
-# - Data location: /root/deployment/reducer/
+# - Data location: /root/SAR_app/deployment/reducer/
 # - Output: animated GIF
 #
 set -e
 set -x
 
+
+echo "@REDUCER_RUN - "$(timestamp): "start conversion"
 output=SAR_animation_$(date +%s).gif
 base_path=~/SAR_app/deployment/reducer
-
 convert -delay 90 -loop 0 $base_path/*.png $base_path/$output
+echo "@REDUCER_RUN - "$(timestamp): "finish conversion - \
+                    $output - get_file_size $output"

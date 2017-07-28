@@ -20,17 +20,17 @@ import gc
 
 
 def timestamp():
-    return("@SAR_PROC: " + str(datetime.datetime.now().isoformat() + ' - '))
+    return("@SAR_PROC - " + str(datetime.datetime.now().isoformat() + ' - '))
 
 start_time=time.time()
-print(timestamp()+"processing starts")
+print(timestamp()+"start processing")
 
 # TODO check with zipped files
 s1paths = list(sys.argv[1].split(','))
 s1meta = "manifest.safe"
 
 products = []
-print(timestamp()+"reading product")
+print(timestamp()+"start reading")
 for s1path in s1paths:
     s1prd = "%s.SAFE/%s" % (s1path, s1meta)
     reader = ProductIO.getProductReader("SENTINEL-1")
@@ -75,11 +75,11 @@ for product in products:
     subset = GPF.createProduct('Subset', parameters, product)
     subsets.append(subset)
 
-print(timestamp()+"Subset dimension: %d x %d pixels" % (subset.getSceneRasterWidth(), subset.getSceneRasterHeight()))
+#print(timestamp()+"Subset dimension: %d x %d pixels" % (subset.getSceneRasterWidth(), subset.getSceneRasterHeight()))
 # print("Subset region: %d " % (subset.getRegion()))
 
 # Step 1: Pre-processing - Calibration
-print(timestamp()+"start Calibration")
+print(timestamp()+"start calibration")
 
 parameters = HashMap()
 
@@ -113,7 +113,7 @@ for calibrate in calibrates:
     speckles.append(speckle)
 
 parrameters = HashMap()
-print(timestamp()+"start Terrain-Correction")
+print(timestamp()+"start terrain-correction")
 
 parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
@@ -128,7 +128,7 @@ for speckle in speckles:
     terrains.append(terrain)
 
 parameters = HashMap()
-print(timestamp()+"start Lineartodb conversion")
+print(timestamp()+"start lineartodb-conversion")
 
 lineartodbs = []
 
@@ -179,4 +179,4 @@ for lineartodb in lineartodbs:
 #    print2(lineartodb.getBand('Sigma0_VV_db'))
 
 
-print(timestamp()+"Done. Processing time: " + str(time.time()-start_time) + "seconds")
+print(timestamp()+"finish processing - " + str(time.time()-start_time) + "seconds")
