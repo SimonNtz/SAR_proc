@@ -7,7 +7,7 @@
 #
 set -e
 set -x
-
+source ~/SAR_app/deployment/lib.sh
 
 echo "@REDUCER_RUN - "$(timestamp): "start conversion"
 output=SAR_animation_$(date +%s).gif
