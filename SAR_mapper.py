@@ -21,7 +21,7 @@ import gc
 
 
 def timestamp():
-    return("@SAR_PROC - " + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + ' - '))
+    return("@SAR_PROC - " + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + ' - ')
 
 start_time=time.time()
 print(timestamp()+"start processing")
