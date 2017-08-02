@@ -4,6 +4,7 @@ import snappy
 from snappy import GPF
 from snappy import HashMap
 from snappy import (ProductIO, ProductUtils, ProgressMonitor)
+from datetime import datetime
 jpy = snappy.jpy
 
 imageIO = jpy.get_type('javax.imageio.ImageIO')
@@ -15,12 +16,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import ndimage
 import time
-import datetime
+
 import gc
 
 
 def timestamp():
-    return("@SAR_PROC - " + str(datetime.datetime.now().isoformat() + ' - '))
+    return("@SAR_PROC - " + datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S") + ' - '))
 
 start_time=time.time()
 print(timestamp()+"start processing")
