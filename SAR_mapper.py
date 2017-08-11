@@ -86,7 +86,7 @@ parameters = HashMap()
 
 parameters.put('auxFile', 'Latest Auxiliary File')
 parameters.put('outputSigmaBand', True)
-parameters.put('selectedPolarisations', 'VV')
+#parameters.put('selectedPolarisations', 'VV')
 
 calibrates = []
 
@@ -120,7 +120,7 @@ parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('demName', 'SRTM 3Sec')
 parameters.put('pixelSpacingInMeter', 10.0)
-parameters.put('sourceBands', 'Sigma0_VV')
+#parameters.put('sourceBands', 'Sigma0_VV')
 
 terrains = []
 
