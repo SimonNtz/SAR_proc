@@ -181,10 +181,10 @@ def print2(band):
 
 
 for lineartodb in lineartodbs:
-    #printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
+    #printBand(lineartodb, 'Sigma0_'+ band +'_db', -25, 5)
     #plt.close()
     #gc.collect()
-    print2(lineartodb.getBand('Sigma0_VV_db'))
+    print2(lineartodb.getBand('Sigma0_'+ band +'_db'))
 
 
 print(timestamp()+"finish processing - " + str(time.time()-start_time) + "seconds")
