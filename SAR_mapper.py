@@ -62,7 +62,7 @@ GPF.getDefaultInstance().getOperatorSpiRegistry().loadOperatorSpis()
 parameters = HashMap()
 
 x = 4000
-y = 4000
+y = 0
 width = 4356
 height = 4673
 
