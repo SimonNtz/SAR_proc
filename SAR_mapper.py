@@ -125,8 +125,7 @@ print(timestamp()+"start terrain-correction")
 params.put('demResamplingMethod', 'BILINEAR_INTERPOLATION')
 params.put('imgResamplingMethod', 'BILINEAR_INTERPOLATION')
 params.put('demName', 'ASTER 1Sec GDEM')
-params.put('pixelSpacingInMeter', 40.0)
-#params.put('sourceBands', 'Sigma0_HH')
+params.put('pixelSpacingInMeter', 10.0)
 params.put('nodataValueAtSea', False)
 parameters.put('sourceBands', 'Sigma0' + '_' + band)
 
@@ -182,10 +181,10 @@ def print2(band):
 
 
 for lineartodb in lineartodbs:
-    printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
-    plt.close()
-    gc.collect()
-#    print2(lineartodb.getBand('Sigma0_VV_db'))
+    #printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
+    #plt.close()
+    #gc.collect()
+    print2(lineartodb.getBand('Sigma0_VV_db'))
 
 
 print(timestamp()+"finish processing - " + str(time.time()-start_time) + "seconds")
