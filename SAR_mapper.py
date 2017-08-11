@@ -48,6 +48,7 @@ for product in products:
     band_names = product.getBandNames()
     print("Product: %s, %d x %d pixels" % (name, width, height))
     print("Bands:   %s" % (list(band_names)))
+    band = band_names[0].split('_')[-1]
 
 print(timestamp()+"start subsetting")
 
@@ -86,7 +87,7 @@ parameters = HashMap()
 
 parameters.put('auxFile', 'Latest Auxiliary File')
 parameters.put('outputSigmaBand', True)
-#parameters.put('selectedPolarisations', 'VV')
+parameters.put('selectedPolarisations', band)
 
 calibrates = []
 
@@ -116,11 +117,18 @@ for calibrate in calibrates:
 parrameters = HashMap()
 print(timestamp()+"start terrain-correction")
 
-parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
-parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
-parameters.put('demName', 'SRTM 3Sec')
-parameters.put('pixelSpacingInMeter', 10.0)
-#parameters.put('sourceBands', 'Sigma0_VV')
+# parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
+# parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
+# parameters.put('demName', 'SRTM 3Sec')
+# parameters.put('pixelSpacingInMeter', 10.0)
+
+params.put('demResamplingMethod', 'BILINEAR_INTERPOLATION')
+params.put('imgResamplingMethod', 'BILINEAR_INTERPOLATION')
+params.put('demName', 'ASTER 1Sec GDEM')
+params.put('pixelSpacingInMeter', 40.0)
+#params.put('sourceBands', 'Sigma0_HH')
+params.put('nodataValueAtSea', False)
+parameters.put('sourceBands', 'Sigma0' + '_' + band)
 
 terrains = []
 
