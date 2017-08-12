@@ -48,7 +48,6 @@ for product in products:
     band_names = product.getBandNames()
     print("Product: %s, %d x %d pixels" % (name, width, height))
     print("Bands:   %s" % (list(band_names)))
-    band = band_names[0].split('_')[-1]
 
 print(timestamp()+"start subsetting")
 
@@ -62,7 +61,7 @@ GPF.getDefaultInstance().getOperatorSpiRegistry().loadOperatorSpis()
 parameters = HashMap()
 
 x = 4000
-y = 0
+y = 4000
 width = 4356
 height = 4673
 
@@ -87,7 +86,7 @@ parameters = HashMap()
 
 parameters.put('auxFile', 'Latest Auxiliary File')
 parameters.put('outputSigmaBand', True)
-parameters.put('selectedPolarisations', band)
+parameters.put('selectedPolarisations', 'VV')
 
 calibrates = []
 
@@ -117,17 +116,11 @@ for calibrate in calibrates:
 parrameters = HashMap()
 print(timestamp()+"start terrain-correction")
 
-# parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
-# parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
-# parameters.put('demName', 'SRTM 3Sec')
-# parameters.put('pixelSpacingInMeter', 10.0)
-
-parameters.put('demResamplingMethod', 'BILINEAR_INTERPOLATION')
-parameters.put('imgResamplingMethod', 'BILINEAR_INTERPOLATION')
-parameters.put('demName', 'ASTER 1Sec GDEM')
+parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
+parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
+parameters.put('demName', 'SRTM 3Sec')
 parameters.put('pixelSpacingInMeter', 10.0)
-parameters.put('nodataValueAtSea', False)
-parameters.put('sourceBands', 'Sigma0' + '_' + band)
+parameters.put('sourceBands', 'Sigma0_VV')
 
 terrains = []
 
@@ -181,10 +174,10 @@ def print2(band):
 
 
 for lineartodb in lineartodbs:
-    #printBand(lineartodb, 'Sigma0_'+ band +'_db', -25, 5)
-    #plt.close()
-    #gc.collect()
-    print2(lineartodb.getBand('Sigma0_'+ band +'_db'))
+    # printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
+    # plt.close()
+    # gc.collect()
+    print2(lineartodb.getBand('Sigma0_VV_db'))
 
 
 print(timestamp()+"finish processing - " + str(time.time()-start_time) + "seconds")
