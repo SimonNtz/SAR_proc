@@ -62,7 +62,7 @@ GPF.getDefaultInstance().getOperatorSpiRegistry().loadOperatorSpis()
 parameters = HashMap()
 
 x = 4000
-y = 4000
+y = 0
 width = 4356
 height = 4673
 
@@ -117,11 +117,17 @@ for calibrate in calibrates:
 parrameters = HashMap()
 print(timestamp()+"start terrain-correction")
 
-parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
-parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
-parameters.put('demName', 'SRTM 3Sec')
+# parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
+# parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
+# parameters.put('demName', 'SRTM 3Sec')
+# parameters.put('pixelSpacingInMeter', 10.0)
+
+parameters.put('demResamplingMethod', 'BILINEAR_INTERPOLATION')
+parameters.put('imgResamplingMethod', 'BILINEAR_INTERPOLATION')
+parameters.put('demName', 'ASTER 1Sec GDEM')
 parameters.put('pixelSpacingInMeter', 10.0)
-parameters.put('sourceBands', 'Sigma0_' + band + '_db')
+parameters.put('nodataValueAtSea', False)
+parameters.put('sourceBands', 'Sigma0' + '_' + band)
 
 terrains = []
 
@@ -175,10 +181,10 @@ def print2(band):
 
 
 for lineartodb in lineartodbs:
-    printBand(lineartodb, 'Sigma0_' + band + '_db', -25, 5)
-    plt.close()
-    gc.collect()
-#    print2(lineartodb.getBand('Sigma0_VV_db'))
+    #printBand(lineartodb, 'Sigma0_'+ band +'_db', -25, 5)
+    #plt.close()
+    #gc.collect()
+    print2(lineartodb.getBand('Sigma0_'+ band +'_db'))
 
 
 print(timestamp()+"finish processing - " + str(time.time()-start_time) + "seconds")
