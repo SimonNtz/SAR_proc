@@ -48,6 +48,7 @@ for product in products:
     band_names = product.getBandNames()
     print("Product: %s, %d x %d pixels" % (name, width, height))
     print("Bands:   %s" % (list(band_names)))
+    band = band_names.split('-')[-1]
 
 print(timestamp()+"start subsetting")
 
@@ -86,7 +87,7 @@ parameters = HashMap()
 
 parameters.put('auxFile', 'Latest Auxiliary File')
 parameters.put('outputSigmaBand', True)
-parameters.put('selectedPolarisations', 'VV')
+parameters.put('selectedPolarisations', band)
 
 calibrates = []
 
@@ -120,7 +121,7 @@ parameters.put('demResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('imgResamplingMethod', 'NEAREST_NEIGHBOUR')
 parameters.put('demName', 'SRTM 3Sec')
 parameters.put('pixelSpacingInMeter', 10.0)
-parameters.put('sourceBands', 'Sigma0_VV')
+parameters.put('sourceBands', 'Sigma0_' + band)
 
 terrains = []
 
@@ -174,7 +175,7 @@ def print2(band):
 
 
 for lineartodb in lineartodbs:
-    printBand(lineartodb, 'Sigma0_VV_db', -25, 5)
+    printBand(lineartodb, 'Sigma0_' + band + '_db', -25, 5)
     plt.close()
     gc.collect()
     #print2(lineartodb.getBand('Sigma0_VV_db'))
