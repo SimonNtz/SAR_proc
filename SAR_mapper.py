@@ -48,7 +48,7 @@ for product in products:
     band_names = product.getBandNames()
     print("Product: %s, %d x %d pixels" % (name, width, height))
     print("Bands:   %s" % (list(band_names)))
-    band = list(band_names)[0].split('-')[-1]
+    band = list(band_names)[0].split('_')[-1]
 
 print(timestamp()+"start subsetting")
 
